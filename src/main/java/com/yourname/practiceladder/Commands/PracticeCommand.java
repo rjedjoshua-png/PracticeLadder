@@ -1,5 +1,6 @@
 package com.yourname.practiceladder.Commands;
 
+import com.yourname.practiceladder.Managers.MenuManager;
 import com.yourname.practiceladder.PracticeLadder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,23 +10,21 @@ import org.bukkit.entity.Player;
 public class PracticeCommand implements CommandExecutor {
 
     private final PracticeLadder plugin;
+    private final MenuManager menuManager;
 
-    public PracticeCommand(PracticeLadder plugin) {
+    public PracticeCommand(PracticeLadder plugin, MenuManager menuManager) {
         this.plugin = plugin;
+        this.menuManager = menuManager;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command.");
+            sender.sendMessage("Only players can open the practice menu.");
             return true;
         }
 
-        player.sendMessage("§e=== Practice Ladder ===");
-        player.sendMessage("§7Use /queue <ladder> to join a queue");
-        player.sendMessage("§7Available ladders: vanilla, sumo, archer, no_debuff");
-        player.sendMessage("§7Use /stats to view your stats");
-        player.sendMessage("§7Use /rank to view your rank progression");
+        player.openInventory(menuManager.createMainMenu());
         return true;
     }
 }

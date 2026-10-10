@@ -1,6 +1,7 @@
 package com.yourname.practiceladder.Commands;
 
 import com.yourname.practiceladder.Managers.DataManager;
+import com.yourname.practiceladder.Managers.DisplayManager;
 import com.yourname.practiceladder.Managers.RankingManager;
 import com.yourname.practiceladder.Model.PlayerStats;
 import com.yourname.practiceladder.Model.RankProgress;
@@ -10,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class StatsCommand implements CommandExecutor {
@@ -17,11 +19,13 @@ public class StatsCommand implements CommandExecutor {
     private final PracticeLadder plugin;
     private final DataManager dataManager;
     private final RankingManager rankingManager;
+    private final DisplayManager displayManager;
 
-    public StatsCommand(PracticeLadder plugin, DataManager dataManager, RankingManager rankingManager) {
+    public StatsCommand(PracticeLadder plugin, DataManager dataManager, RankingManager rankingManager, DisplayManager displayManager) {
         this.plugin = plugin;
         this.dataManager = dataManager;
         this.rankingManager = rankingManager;
+        this.displayManager = displayManager;
     }
 
     @Override
@@ -34,21 +38,23 @@ public class StatsCommand implements CommandExecutor {
         UUID uuid = player.getUniqueId();
         PlayerStats stats = dataManager.getPlayerStats(uuid);
 
-        player.sendMessage("§e=== Your Stats ===");
+        player.sendMessage("§8§l=== Stats ===");
         player.sendMessage("§7Wins: §f" + stats.getWins());
         player.sendMessage("§7Losses: §f" + stats.getLosses());
-        
-        if (stats.getWins() + stats.getLosses() > 0) {
-            double winrate = (double) stats.getWins() / (stats.getWins() + stats.getLosses()) * 100;
-            player.sendMessage("§7Win Rate: §f" + String.format("%.1f%%", winrate));
+
+        List<String> gamemodes = plugin.getConfig().getStringList("gamemodes");
+        if (gamemodes.isEmpty()) {
+            gamemodes = java.util.Arrays.asList("nethpot", "diapot", "sword");
         }
 
         player.sendMessage("§7\n§eRanks:");
-        RankProgress vanillaRank = rankingManager.getRankProgress(uuid, "vanilla");
-        player.sendMessage("§7Vanilla: §f" + vanillaRank.getDisplayName());
-        
-        RankProgress sumoRank = rankingManager.getRankProgress(uuid, "sumo");
-        player.sendMessage("§7Sumo: §f" + sumoRank.getDisplayName());
+        for (String gamemode : gamemodes) {
+            RankProgress progress = rankingManager.getRankProgress(uuid, gamemode);
+            String gamemodeColor = plugin.getConfig().getString("gamemodes." + gamemode + ".color", "§f");
+            String gamemodeDisplay = plugin.getConfig().getString("gamemodes." + gamemode + ".display", gamemode);
+            player.sendMessage(gamemodeColor + gamemodeDisplay + ": §f" + progress.getDisplayName());
+        }
+
         return true;
     }
 }

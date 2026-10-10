@@ -1,10 +1,56 @@
-ladders:
-  - vanilla
-  - sumo
-  - archer
-  - no_debuff
+spawn:
+  world: world
+  x: 0.5
+  y: 64.0
+  z: 0.5
+  yaw: 0.0
+  pitch: 0.0
 
-ranking:
-  progression_per_win: 20
-  progression_per_loss: -10
-  max_progression: 100
+gamemodes:
+  nethpot:
+    color: "§a"
+    display: "Nethpot"
+  diapot:
+    color: "§b"
+    display: "Diapot"
+  sword:
+    color: "§c"
+    display: "Sword"
+  crystal:
+    color: "§d"
+    display: "Crystal"
+  uhc:
+    color: "§e"
+    display: "UHC"
+  smp:
+    color: "§2"
+    display: "SMP"
+  cart:
+    color: "§3"
+    display: "Cart"
+  axe:
+    color: "§4"
+    display: "Axe"
+  mace:
+    color: "§8"
+    display: "Mace"
+  diasmp:
+    color: "§9"
+    display: "DiaSMP"
+
+ladders:
+  - nethpot
+  - diapot
+  - sword
+  - crystal
+  - uhc
+  - smp
+  - cart
+  - axe
+  - mace
+  - diasmp
+
+progress:
+  win: 25
+  loss: 20
+  max: 100
