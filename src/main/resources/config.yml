@@ -1,0 +1,10 @@
+ladders:
+  - vanilla
+  - sumo
+  - archer
+  - no_debuff
+
+ranking:
+  progression_per_win: 20
+  progression_per_loss: -10
+  max_progression: 100

@@ -21,3 +21,6 @@ commands:
   stats:
     description: View your stats
     usage: /stats
+  rank:
+    description: View your rank progression
+    usage: /rank
