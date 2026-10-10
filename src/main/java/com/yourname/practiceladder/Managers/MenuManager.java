@@ -4,11 +4,13 @@ import com.yourname.practiceladder.Model.RankProgress;
 import com.yourname.practiceladder.PracticeLadder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -39,8 +41,12 @@ public class MenuManager {
     public Inventory createGamemodeMenu() {
         Inventory inv = Bukkit.createInventory(null, 45, "§8§lSelect Gamemode");
 
-        List<String> gamemodes = plugin.getConfig().getStringList("gamemodes");
-        if (gamemodes.isEmpty()) {
+        List<String> gamemodes = new ArrayList<>();
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("gamemodes");
+
+        if (section != null && !section.getKeys(false).isEmpty()) {
+            gamemodes.addAll(section.getKeys(false));
+        } else {
             gamemodes = Arrays.asList("nethpot", "diapot", "sword", "crystal", "uhc", "smp", "cart", "axe", "mace", "diasmp");
         }
 
@@ -86,10 +92,10 @@ public class MenuManager {
             if (slot >= 54) break;
             UUID uuid = p.getUniqueId();
             RankProgress progress = rankingManager.getRankProgress(uuid, gamemode);
-            String rankLabel = "[" + progress.getRank().getLabel() + progress.getLevel() + "]";
+            String rankLabel = "[" + progress.getRank().getName() + progress.getLevel() + "]";
             String gamemodeColor = plugin.getConfig().getString("gamemodes." + gamemode + ".color", "§f");
             String gamemodeDisplay = plugin.getConfig().getString("gamemodes." + gamemode + ".display", gamemode);
-            
+
             String displayName = rankLabel + " " + gamemodeColor + "[" + gamemodeDisplay + "] §f" + p.getName();
             inv.setItem(slot, makeItem(Material.PLAYER_HEAD, displayName, "§7Click to challenge"));
             slot++;
